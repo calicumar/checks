@@ -292,19 +292,19 @@
               <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
                 <div class="nav-wrapper position-relative end-0">
                   <ul class="nav nav-pills nav-fill p-1 flex-column on-resize" role="tablist">
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item nav-item-ques" role="presentation">
                       <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">
                         <i class="ni ni-app"></i>
                         <span class="ms-2">السؤال الأول</span>
                       </a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item nav-item-ques" role="presentation">
                       <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false" tabindex="-1">
                         <i class="ni ni-email-83"></i>
                         <span class="ms-2">السؤال الثاني</span>
                       </a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item nav-item-ques" role="presentation">
                       <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false" tabindex="-1">
                         <i class="ni ni-settings-gear-65"></i>
                         <span class="ms-2">السوال الثالث</span>
@@ -586,24 +586,29 @@
     }
   </script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-  const navItems = document.querySelectorAll(".nav-item");
-  const movingTab = document.querySelector(".moving-tab");
+  document.addEventListener("DOMContentLoaded", function () {
+  // Select the specific container for the nav-links
+  const navWrapper = document.querySelector(".nav-wrapper"); // Scope to the specific container
+  const navItems = navWrapper.querySelectorAll(".nav-item"); // Only select nav-items inside this container
+  const movingTab = navWrapper.querySelector(".moving-tab"); // Only select the moving tab inside this container
 
   navItems.forEach((item) => {
     item.addEventListener("click", function () {
-      // Remove active class from all nav items
+      // Remove active class and danger background from all nav items within this container
       navItems.forEach((navItem) => {
-        navItem.querySelector(".nav-link").classList.remove("active");
+        const navLink = navItem.querySelector(".nav-link");
+        navLink.classList.remove("active");
+        navLink.style.backgroundColor = ""; // Reset background color
       });
 
-      // Add active class to the clicked nav item
+      // Add active class and danger background to the clicked nav item
       const navLink = item.querySelector(".nav-link");
       navLink.classList.add("active");
+      navLink.style.backgroundColor = "#dc3545"; // Danger color (red)
 
       // Calculate the position of the active tab
       const itemRect = item.getBoundingClientRect();
-      const containerRect = item.closest(".nav-wrapper").getBoundingClientRect();
+      const containerRect = navWrapper.getBoundingClientRect();
 
       const leftPosition = itemRect.left - containerRect.left;
       const width = itemRect.width;
@@ -614,11 +619,12 @@
     });
   });
 
-  // Initialize the moving tab position for the first active item
-  const activeNavItem = document.querySelector(".nav-item .nav-link.active").closest(".nav-item");
+  // Initialize the moving tab position and active link for the first active item
+  const activeNavItem = navWrapper.querySelector(".nav-item .nav-link.active");
   if (activeNavItem) {
-    const itemRect = activeNavItem.getBoundingClientRect();
-    const containerRect = activeNavItem.closest(".nav-wrapper").getBoundingClientRect();
+    activeNavItem.style.backgroundColor = "#dc3545"; // Danger color (red)
+    const itemRect = activeNavItem.closest(".nav-item").getBoundingClientRect();
+    const containerRect = navWrapper.getBoundingClientRect();
 
     const leftPosition = itemRect.left - containerRect.left;
     const width = itemRect.width;
